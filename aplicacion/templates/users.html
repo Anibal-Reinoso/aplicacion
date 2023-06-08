@@ -1,0 +1,19 @@
+{% extends 'base_layout.html' %}
+
+{% block content %}
+
+<div class="container">
+    <h1 class="h1-usuarios">Corriendo usuarios</h1>
+    <ul>
+        {% for usuario in usuarios %}
+        <li>{{ usuario }}</li>
+        {% endfor %}
+    </ul>
+    {% if otros|length > 0 %} {% for otro in otros %}
+    <p>{{ otro }}</p>
+    {% endfor %} {% else %}
+    <p>No existen mas usuarios</p>
+    {% endif %}
+</div>
+
+{% endblock  %}
