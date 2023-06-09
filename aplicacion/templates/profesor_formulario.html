@@ -1,0 +1,14 @@
+{% extends 'base_layout.html' %}
+
+{% block content %}
+
+<h1>Ingresar Profesores:</h1>
+<form action="", method="POST">
+    {% csrf_token %}
+    <table>
+        {{ form.as_p }}
+    </table>
+    <button type="submit">Enviar</button>
+</form>
+
+{% endblock  %}
