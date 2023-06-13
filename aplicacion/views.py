@@ -2,7 +2,9 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from .forms import ProfesorForm
 from .models import Profesor
+from django.contrib import messages
 
+from .forms import UserRegistrationForm
 # Create your views here.
 
 def welcome(request):
@@ -56,3 +58,26 @@ def crear_profesor(request):
     }
 
     return render(request, 'profesor_formulario.html', context=context)
+
+# def register_user(request):
+#     user = User.objects.create(
+#         username="RodrigoF",
+#         password="1234rodrigo",
+#         is_staff=True
+#     )
+#     user.save()
+#     return redirect('/home')
+
+def register_user(request):
+    if request.method == "POST":
+        form = UserRegistrationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data['username']
+            messages.success(request, f'Usuario {username} creado exitosamente!!')
+            return redirect('/home')
+    else:
+        form = UserRegistrationForm()
+    
+    context = {'form': form}
+    return render(request, 'register_user.html', context)
