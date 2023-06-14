@@ -1,10 +1,10 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from .forms import ProfesorForm
-from .models import Profesor
+from .models import Profesor, Escuela
 from django.contrib import messages
 
-from .forms import UserRegistrationForm
+from .forms import UserRegistrationForm, EscuelaForm
 # Create your views here.
 
 def welcome(request):
@@ -81,3 +81,31 @@ def register_user(request):
     
     context = {'form': form}
     return render(request, 'register_user.html', context)
+
+
+def formulario(request):
+    form = EscuelaForm()
+
+    if request.method == "POST":
+        form = EscuelaForm(request.POST)
+        if form.is_valid():
+            print(form)
+            escuela = Escuela()
+            escuela.nombre = form.cleaned_data['nombre']
+            escuela.direccion = form.cleaned_data['direccion']
+            escuela.email = form.cleaned_data['email']
+            escuela.save()
+        else:
+            print("Datos invalidos")
+        return redirect('/mostrar_escuela')
+    context = {'form': form}
+
+    return render(request, 'formulario.html', context=context)
+
+def mostrar_escuela(request):
+
+    datos = Escuela.objects.all()
+
+    context = {'escuelas': datos}
+
+    return render(request, 'mostrar_escuela.html', context=context)

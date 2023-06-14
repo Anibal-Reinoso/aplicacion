@@ -1,0 +1,17 @@
+{% extends 'base_layout.html' %}
+
+{% block content %}
+<h1>Listado de escuelas en base</h1>
+
+<h3>Escuelas:</h3>
+<div class="container">
+    {% for escuela in escuelas %}
+    <ul>
+        <li>Nombre: {{ escuela.nombre }}</li>
+        <li>Direccion: {{ escuela.direccion }}</li>
+        <li>Email: {{ escuela.email }}</li>
+    </ul>
+    {% endfor %}
+</div>
+
+{% endblock %}
