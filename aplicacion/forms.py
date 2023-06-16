@@ -29,3 +29,7 @@ class EscuelaForm(forms.ModelForm):
     class Meta:
         model = Escuela
         fields = '__all__'
+
+class LoginForm(forms.Form):
+    nombre = forms.CharField(widget=forms.TextInput)
+    password = forms.CharField(widget=forms.PasswordInput)

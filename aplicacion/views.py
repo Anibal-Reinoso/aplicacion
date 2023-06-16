@@ -1,15 +1,19 @@
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
+from django.contrib.auth import authenticate, login as auth_login
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from .forms import ProfesorForm
 from .models import Profesor, Escuela
 from django.contrib import messages
 
-from .forms import UserRegistrationForm, EscuelaForm
+from .forms import UserRegistrationForm, EscuelaForm, LoginForm
 # Create your views here.
 
 def welcome(request):
     return render(request, "home.html")
 
+@login_required
 def home(request):
     users = User.objects.all()
 
@@ -22,6 +26,7 @@ def home(request):
 
     return render(request, "users.html", context=context)
 
+@login_required
 def view_client(request):
 
     context = {"nombre": "Javier",
@@ -30,6 +35,7 @@ def view_client(request):
     
     return render(request, 'clients.html', context=context)
 
+@login_required
 def crear_profesor(request):
     form = ProfesorForm()
 
@@ -68,6 +74,7 @@ def crear_profesor(request):
 #     user.save()
 #     return redirect('/home')
 
+@login_required
 def register_user(request):
     if request.method == "POST":
         form = UserRegistrationForm(request.POST)
@@ -83,6 +90,7 @@ def register_user(request):
     return render(request, 'register_user.html', context)
 
 
+@login_required
 def formulario(request):
     form = EscuelaForm()
 
@@ -102,6 +110,7 @@ def formulario(request):
 
     return render(request, 'formulario.html', context=context)
 
+@login_required
 def mostrar_escuela(request):
 
     datos = Escuela.objects.all()
@@ -109,3 +118,22 @@ def mostrar_escuela(request):
     context = {'escuelas': datos}
 
     return render(request, 'mostrar_escuela.html', context=context)
+
+def login(request):
+    if request.method=="POST":
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            usuario = form.cleaned_data["nombre"]
+            clave = form.cleaned_data["password"]
+            user = authenticate(request, username=usuario, password=clave)
+            if user is not None:
+                if user.is_active:
+                    auth_login(request, user)
+                    return redirect('/home')
+                else:
+                    return HttpResponse('Cuenta deshabilitada')
+            else:
+                return HttpResponse('Login no valido')
+    else:
+        form = LoginForm()
+    return render(request, 'login.html', {'form':form})
