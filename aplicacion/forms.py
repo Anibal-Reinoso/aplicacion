@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group, Permission
 from .models import Escuela
 
 class ProfesorForm(forms.Form):
@@ -18,6 +18,11 @@ class UserRegistrationForm(UserCreationForm):
     password1 = forms.CharField(label="Contraseña", widget=forms.PasswordInput)
     password2 = forms.CharField(label="Confirmacion contraseña", widget=forms.PasswordInput)
     date = forms.DateField()
+    group = forms.ModelChoiceField(queryset=Group.objects.all())
+    permissions = forms.ModelMultipleChoiceField(
+        queryset=Permission.objects.all(),
+        widget=forms.CheckboxSelectMultiple
+    )
 
     class Meta:
         model = User

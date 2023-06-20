@@ -11,7 +11,7 @@ from .forms import UserRegistrationForm, EscuelaForm, LoginForm
 # Create your views here.
 
 def welcome(request):
-    return render(request, "home.html")
+    return render(request, "aplicacion/home.html")
 
 @login_required
 def home(request):
@@ -24,7 +24,7 @@ def home(request):
         "otros": nuevos,
     }
 
-    return render(request, "users.html", context=context)
+    return render(request, "aplicacion/users.html", context=context)
 
 @login_required
 def view_client(request):
@@ -33,7 +33,7 @@ def view_client(request):
                "edad": 30,
                "oficio": "empleado administrativo"}
     
-    return render(request, 'clients.html', context=context)
+    return render(request, 'aplicacion/clients.html', context=context)
 
 @login_required
 def crear_profesor(request):
@@ -63,7 +63,7 @@ def crear_profesor(request):
         'form': form
     }
 
-    return render(request, 'profesor_formulario.html', context=context)
+    return render(request, 'aplicacion/profesor_formulario.html', context=context)
 
 # def register_user(request):
 #     user = User.objects.create(
@@ -79,15 +79,19 @@ def register_user(request):
     if request.method == "POST":
         form = UserRegistrationForm(request.POST)
         if form.is_valid():
-            form.save()
+            user = form.save()
+            group = form.cleaned_data['group']
+            permissions = form.cleaned_data['permissions']
             username = form.cleaned_data['username']
+            user.groups.add(group)
+            user.user_permissions.set(permissions)
             messages.success(request, f'Usuario {username} creado exitosamente!!')
             return redirect('/home')
     else:
         form = UserRegistrationForm()
     
     context = {'form': form}
-    return render(request, 'register_user.html', context)
+    return render(request, 'aplicacion/register_user.html', context)
 
 
 @login_required
@@ -108,7 +112,7 @@ def formulario(request):
         return redirect('/mostrar_escuela')
     context = {'form': form}
 
-    return render(request, 'formulario.html', context=context)
+    return render(request, 'aplicacion/formulario.html', context=context)
 
 @login_required
 def mostrar_escuela(request):
@@ -117,7 +121,7 @@ def mostrar_escuela(request):
 
     context = {'escuelas': datos}
 
-    return render(request, 'mostrar_escuela.html', context=context)
+    return render(request, 'aplicacion/mostrar_escuela.html', context=context)
 
 # def login(request):
 #     if request.method=="POST":
@@ -136,7 +140,7 @@ def mostrar_escuela(request):
 #                 return HttpResponse('Login no valido')
 #     else:
 #         form = LoginForm()
-#     return render(request, 'login.html', {'form':form})
+#     return render(request, 'aplicacion/login.html', {'form':form})
 
 
 # def logout(request):

@@ -1,0 +1,18 @@
+{% extends 'base_layout.html' %}
+
+{% block content %}
+{% if messages %}
+    {% for message in messages %}
+    <div class="{{ message.tags }}">{{ message|capfirst}}</div>
+    {% endfor %}
+{% endif %}
+
+<form action="" method="post">
+
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class='btn btn-primary'>Registrarse</button>
+
+</form>
+
+{% endblock  %}

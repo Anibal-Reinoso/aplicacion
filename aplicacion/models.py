@@ -22,3 +22,9 @@ class Profesor(models.Model):
 
     def __str__(self):
         return self.apellido
+
+class RegistroProfesorEscuela(models.Model):
+    profesor = models.ForeignKey(Profesor, null=True, on_delete=models.SET_NULL)
+    escuela = models.ForeignKey(Escuela, null=True, on_delete=models.SET_NULL)
+    detalle = models.TextField(max_length=200, null=True)
+    horas = models.IntegerField(null=True)
